@@ -29,6 +29,8 @@ doc_ref = db.collection("T1R1").document("Scan "+number)
 doc = doc_ref.get()
 
 Np_result = np.array(doc)
+Np_result
+'''
 df = pd.DataFrame(Np_result)
 st.write(df);
 @st.cache
