@@ -30,6 +30,7 @@ doc = doc_ref.get()
 
 Np_result = np.array(doc)
 Np_result
+
 '''
 df = pd.DataFrame(Np_result)
 st.write(df);
@@ -45,3 +46,4 @@ st.download_button(
      "text/csv",
      key='download-csv'
  )
+ '''
