@@ -28,7 +28,7 @@ doc_ref = db.collection("T1R1").document("Scan "+number)
 # Then get the data at that reference.
 doc = doc_ref.get()
 
-Np_result = np.array(doc)
+Np_result = np.array(doc.to_dict())
 Np_result
 
 '''
