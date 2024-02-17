@@ -35,7 +35,7 @@ st.write(doc.to_dict())
 
 #df = pd.DataFrame(doc.to_dict())
 df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
-
+df = df.transpose()
 st.write(df);
 '''
 @st.cache
