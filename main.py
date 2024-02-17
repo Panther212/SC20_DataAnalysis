@@ -30,6 +30,7 @@ doc = doc_ref.get()
 
 Np_result = np.array(doc.to_dict())
 Np_result
+st.write(doc.to_dict())
 
 '''
 df = pd.DataFrame(Np_result)
