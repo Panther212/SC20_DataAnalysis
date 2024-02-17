@@ -33,7 +33,9 @@ Np_result
 st.write(doc.to_dict())
 
 
-df = pd.DataFrame(doc.to_dict())
+#df = pd.DataFrame(doc.to_dict())
+df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
+
 st.write(df);
 '''
 @st.cache
