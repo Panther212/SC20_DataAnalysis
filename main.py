@@ -28,10 +28,9 @@ doc_ref = db.collection("T1R1").document("Scan "+number)
 # Then get the data at that reference.
 doc = doc_ref.get()
 
-Np_result = np.array(doc.to_dict())
-Np_result
-st.write(doc.to_dict())
-
+#Np_result = np.array(doc.to_dict())
+#Np_result
+#st.write(doc.to_dict())
 
 #df = pd.DataFrame(doc.to_dict())
 df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
@@ -50,4 +49,3 @@ st.download_button(
      "text/csv",
      key='download-csv'
  )
- 
