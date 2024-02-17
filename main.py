@@ -32,9 +32,10 @@ Np_result = np.array(doc.to_dict())
 Np_result
 st.write(doc.to_dict())
 
-'''
-df = pd.DataFrame(Np_result)
+
+df = pd.DataFrame(doc.to_dict())
 st.write(df);
+'''
 @st.cache
 def convert_df(df):
  return df.to_csv().encode('utf-8')
