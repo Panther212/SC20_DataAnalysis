@@ -3,7 +3,7 @@ import numpy as np
 import google.cloud
 from google.cloud import firestore
 import pandas as pd
-import openpyxl
+
 
 st.set_page_config(layout="wide")
 st.title('Data Analytics')
