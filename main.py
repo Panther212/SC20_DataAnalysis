@@ -28,6 +28,7 @@ number = st.text_input('Enter Scan number', '')
 
 doc_ref = db.collection("T1R1").stream()
 i=1 
+df = pd.DataFrame()
 for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
     radar = doc.to_dict()['Radar Raw']
