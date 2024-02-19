@@ -3,7 +3,7 @@ import numpy as np
 import google.cloud
 from google.cloud import firestore
 import pandas as pd
-
+from io import BytesIO
 
 st.set_page_config(layout="wide")
 st.title('Data Analytics')
@@ -61,7 +61,7 @@ st.write(df);
 
 #df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
 #st.wrte(df2);
-
+"""
 @st.cache
 def convert_df(df):
  return df.to_excel("file.xlsx")
@@ -75,5 +75,11 @@ st.download_button(
      "text/csv",
      key='download-csv'
  )
+"""
 
+ buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        df.to_excel(writer, sheet_name='Report')
+
+    st.download_button(label="Download Excel workbook", data=buffer.getvalue(), file_name="File", mime="application/vnd.ms-excel")
 
