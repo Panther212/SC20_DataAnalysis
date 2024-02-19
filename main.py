@@ -32,6 +32,7 @@ df = pd.DataFrame()
 for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
     radar = doc.to_dict()['Radar Raw']
+    st.write(np.array(radar))
     df['Radar '+str(i)] = np.array(radar)
     i+=1
     
