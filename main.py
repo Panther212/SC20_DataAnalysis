@@ -43,9 +43,9 @@ df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
 st.write(df2);
 
 @st.cache
-def convert_df(df):
+def convert_df(df2):
  return df.to_csv().encode('utf-8')
-csv = convert_df(df)
+csv = convert_df(df2)
 
 st.download_button(
      "Press to Download",
