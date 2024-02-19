@@ -63,7 +63,7 @@ st.write(df);
 
 @st.cache
 def convert_df(df):
- return df.to_excel()
+ return df.to_excel("file.xlsx")
  #return df.to_excel().encode('utf-8')
 csv = convert_df(df)
 
