@@ -39,7 +39,7 @@ st.write(df);
 df = df.transpose()
 st.write(df);
 
-df2 = df["adxl_Rawdata "+number]
+df2 = df["adxl_Rawdata "+number, "Radar_Rawdata "+number]
 st.write(df2);
 
 @st.cache
