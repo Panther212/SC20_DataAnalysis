@@ -30,7 +30,7 @@ doc_ref = db.collection("T1R1").stream()
 i=1 
 for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
-    radar = u'{}'.format(doc.to_dict()['Radar Raw'])
+    radar = doc.to_dict()['Radar Raw']
     #result = radar.items()
    # data = list(result)
    # numpyArray = np.array(data)
