@@ -31,16 +31,15 @@ i=1
 for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
     radar = doc.to_dict()['Radar Raw']
-    #result = radar.items()
-   # data = list(result)
-    numpyArray = np.array(radar)
-    st.write(numpyArray);
+    df['Radar '+i] = np.array(radar)
+    i++;
+    
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
  #   df['ADXL'] = pd.DataFrame.from_dict(adxl, orient='index');
 #    i+=1
 
 #st.write(df);
- 
+st.write(df); 
 # Then get the data at that reference.
 #doc = doc_ref.get()
 #bal = u'{}'.format(doc_ref.to_dict()['Balance'])
