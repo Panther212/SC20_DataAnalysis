@@ -26,7 +26,7 @@ number = st.text_input('Enter Scan number', '')
 doc_ref = db.collection("T2R1").document("Scan "+number)
  
 # Then get the data at that reference.
-doc = doc_ref.get()
+doc = doc_ref.get('adxl_Rawdata '+number,'Radar_Rawdata '+number)
 
 #Np_result = np.array(doc.to_dict())
 #Np_result
