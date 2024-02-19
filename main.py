@@ -34,7 +34,7 @@ for doc in doc_ref:
     #result = radar.items()
    # data = list(result)
    # numpyArray = np.array(data)
-    st.write(radar.type());
+    st.write(radar);
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
  #   df['ADXL'] = pd.DataFrame.from_dict(adxl, orient='index');
 #    i+=1
