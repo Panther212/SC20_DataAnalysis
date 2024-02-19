@@ -62,11 +62,10 @@ st.write(df);
 
 #df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
 #st.wrte(df2);
-"""
+
 @st.cache
 def convert_df(df):
- return df.to_excel("file.xlsx")
- #return df.to_excel().encode('utf-8')
+ return df.to_csv().encode('utf-8')
 csv = convert_df(df)
 
 st.download_button(
@@ -76,10 +75,5 @@ st.download_button(
      "text/csv",
      key='download-csv'
  )
-"""
-buffer = BytesIO()
-with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-    df.to_excel(writer, sheet_name='Report')
 
-st.download_button(label="Download Excel workbook", data=buffer.getvalue(), file_name="File", mime="application/vnd.ms-excel")
 
