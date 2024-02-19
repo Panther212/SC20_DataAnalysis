@@ -29,21 +29,21 @@ doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
 #doc = doc_ref.get()
 #bal = u'{}'.format(doc_ref.to_dict()['Balance'])
 for doc in doc_ref:
-st.write(doc.to_dict())
+ st.write(doc.to_dict())
 #Np_result = np.array(doc.to_dict())
 #Np_result
 #st.write(doc.to_dict())
 
 #df = pd.DataFrame(doc.to_dict())
 #st.write(doc.to_dict())
-df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
-st.write(df); 
-df = df.transpose()
-st.write(df);
+#df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
+#st.write(df); 
+#df = df.transpose()
+#st.write(df);
 
 #df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
 #st.write(df2);
-
+'''
 @st.cache
 def convert_df(df2):
  return df2.to_csv().encode('utf-8')
@@ -56,3 +56,4 @@ st.download_button(
      "text/csv",
      key='download-csv'
  )
+'''
