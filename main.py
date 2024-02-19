@@ -28,7 +28,7 @@ doc_ref = db.collection("T2R1").document("Scan "+number)
 # Then get the data at that reference.
 #doc = doc_ref.get()
 #bal = u'{}'.format(doc_ref.to_dict()['Balance'])
-get_adxl = doc_ref.get({u'adxl_Rawdata '+number})
+get_adxl = doc_ref.get({u'adxl_Rawdata 4'})
 st.write(get_adxl.to_dict())
 #Np_result = np.array(doc.to_dict())
 #Np_result
