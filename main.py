@@ -63,13 +63,14 @@ st.write(df);
 
 @st.cache
 def convert_df(df):
- return df.to_excel().encode('utf-8')
+ return df.to_excel()
+ #return df.to_excel().encode('utf-8')
 csv = convert_df(df)
 
 st.download_button(
      "Press to Download",
      csv,
-     "file.xls",
+     "file.xlsx",
      "text/csv",
      key='download-csv'
  )
