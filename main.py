@@ -27,12 +27,15 @@ number = st.text_input('Enter Scan number', '')
 
 
 doc_ref = db.collection("T1R1").stream()
-
+i=1 
 for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
     radar = u'{}'.format(doc.to_dict()['Radar Raw'])
-    st.write(adxl)
-    st.write(radar)
+    df['Radar '+i] = pd.DataFrame.from_dict(radar, orient='index');
+    df['ADXL '+i] = pd.DataFrame.from_dict(adxl, orient='index');
+    i++;
+
+st.write(df);
  
 # Then get the data at that reference.
 #doc = doc_ref.get()
