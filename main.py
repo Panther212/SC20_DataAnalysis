@@ -4,6 +4,7 @@ import google.cloud
 from google.cloud import firestore
 import pandas as pd
 from io import BytesIO
+import xlsxwriter
 
 st.set_page_config(layout="wide")
 st.title('Data Analytics')
