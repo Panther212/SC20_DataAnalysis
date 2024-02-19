@@ -23,13 +23,20 @@ db = firestore.Client.from_service_account_json("testdata1-20ec5-firebase-admins
 number = st.text_input('Enter Scan number', '')
  
 # Create a reference to the Google post.
-doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
+#doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
+
+
+doc_ref = db.collection("T1R1").stream()
+
+for doc in doc_ref:
+    adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
+    st.write(adxl)
  
 # Then get the data at that reference.
 #doc = doc_ref.get()
 #bal = u'{}'.format(doc_ref.to_dict()['Balance'])
-for doc in doc_ref:
- st.write(doc.to_dict())
+#for doc in doc_ref:
+# st.write(doc.to_dict())
 #Np_result = np.array(doc.to_dict())
 #Np_result
 #st.write(doc.to_dict())
