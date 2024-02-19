@@ -76,10 +76,9 @@ st.download_button(
      key='download-csv'
  )
 """
+buffer = BytesIO()
+with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+    df.to_excel(writer, sheet_name='Report')
 
- buffer = BytesIO()
-    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-        df.to_excel(writer, sheet_name='Report')
-
-    st.download_button(label="Download Excel workbook", data=buffer.getvalue(), file_name="File", mime="application/vnd.ms-excel")
+st.download_button(label="Download Excel workbook", data=buffer.getvalue(), file_name="File", mime="application/vnd.ms-excel")
 
