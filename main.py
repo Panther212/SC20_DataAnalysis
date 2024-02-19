@@ -32,7 +32,7 @@ for doc in doc_ref:
     adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
     radar = doc.to_dict()['Radar Raw']
     df['Radar '+i] = np.array(radar)
-    i++;
+    i+=1
     
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
  #   df['ADXL'] = pd.DataFrame.from_dict(adxl, orient='index');
