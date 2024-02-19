@@ -35,6 +35,7 @@ doc = doc_ref.get()
 #df = pd.DataFrame(doc.to_dict())
 st.write(doc.to_dict())
 df = pd.DataFrame.from_dict(doc.to_dict(), orient='index')
+st.write(df); 
 df = df.transpose()
 st.write(df);
 
