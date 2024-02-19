@@ -23,7 +23,7 @@ db = firestore.Client.from_service_account_json("testdata1-20ec5-firebase-admins
 number = st.text_input('Enter Scan number', '')
  
 # Create a reference to the Google post.
-doc_ref = db.collection("T3R1").document("Scan "+number)
+doc_ref = db.collection("T1R1").document("Scan "+number)
  
 # Then get the data at that reference.
 doc = doc_ref.get()
