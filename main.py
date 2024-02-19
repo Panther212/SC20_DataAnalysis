@@ -26,8 +26,10 @@ number = st.text_input('Enter Scan number', '')
 doc_ref = db.collection("T2R1").document("Scan "+number)
  
 # Then get the data at that reference.
-doc = doc_ref.get('/adxl_Rawdata '+number,'/Radar_Rawdata '+number)
-
+#doc = doc_ref.get()
+#bal = u'{}'.format(doc_ref.to_dict()['Balance'])
+get_adxl = doc_ref.get({u'adxl_Rawdata '+number})
+st.write(get_adxl.to_dict())
 #Np_result = np.array(doc.to_dict())
 #Np_result
 #st.write(doc.to_dict())
@@ -39,8 +41,8 @@ st.write(df);
 df = df.transpose()
 st.write(df);
 
-df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
-st.write(df2);
+#df2 = df[["adxl_Rawdata "+number, "Radar_Rawdata "+number]]
+#st.write(df2);
 
 @st.cache
 def convert_df(df2):
