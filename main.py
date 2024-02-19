@@ -30,9 +30,10 @@ doc_ref = db.collection("T1R1").stream()
 i=1 
 df = pd.DataFrame()
 for doc in doc_ref:
-    adxl = u'{}'.format(doc.to_dict()['ADXL Raw'])
+    adxl = doc.to_dict()['ADXL Raw']
     radar = doc.to_dict()['Radar Raw']
     df['Radar '+str(i)] = pd.Series(radar)
+    df['ADXL '+str(i)] = pd.Series(adxl)
     i+=1
     
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
