@@ -36,7 +36,7 @@ for doc in doc_ref:
  #   df['ADXL'] = pd.DataFrame.from_dict(adxl, orient='index');
 #    i+=1
 
-st.write(df);
+#st.write(df);
  
 # Then get the data at that reference.
 #doc = doc_ref.get()
