@@ -39,6 +39,9 @@ st.write(df);
 df = df.transpose()
 st.write(df);
 
+df2 = df["adxl_Rawdata "+number]
+st.write(df2);
+
 @st.cache
 def convert_df(df):
  return df.to_csv().encode('utf-8')
