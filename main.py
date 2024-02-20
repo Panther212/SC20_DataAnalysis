@@ -31,8 +31,8 @@ i=1
 df = pd.DataFrame()
 df2 = pd.DataFrame()
 for doc in doc_ref:
-    adxl = doc.to_dict()['ADXL Raw']
-    radar = doc.to_dict()['Radar Raw']
+    adxl = doc.to_dict()['ADXLRaw']
+    radar = doc.to_dict()['RadarRaw']
     df['Radar '+str(i)] = pd.Series(radar)
     df2['ADXL '+str(i)] = pd.Series(adxl)
     i+=1
