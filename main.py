@@ -26,14 +26,15 @@ number = st.text_input('Enter Scan number', '')
 #doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
 
 
-doc_ref = db.collection("T1R1").stream()
+doc_ref = db.collection("DevMode").stream()
 i=1 
 df = pd.DataFrame()
+df2 = pd.DataFrame()
 for doc in doc_ref:
     adxl = doc.to_dict()['ADXL Raw']
     radar = doc.to_dict()['Radar Raw']
     df['Radar '+str(i)] = pd.Series(radar)
-    df['ADXL '+str(i)] = pd.Series(adxl)
+    df2['ADXL '+str(i)] = pd.Series(adxl)
     i+=1
     
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
@@ -42,6 +43,7 @@ for doc in doc_ref:
 
 #st.write(df);
 st.write(df); 
+st.write(df2); 
 # Then get the data at that reference.
 #doc = doc_ref.get()
 #bal = u'{}'.format(doc_ref.to_dict()['Balance'])
@@ -65,13 +67,23 @@ st.write(df);
 def convert_df(df):
  return df.to_csv().encode('utf-8')
 csv = convert_df(df)
+csv2 = convert_df(df2)
 
 st.download_button(
-     "Press to Download",
+     "Press to Download Radar",
      csv,
-     "file.csv",
+     "Radar.csv",
      "text/csv",
      key='download-csv'
  )
+
+st.download_button(
+     "Press to Download ADXL",
+     csv2,
+     "ADXL.csv",
+     "text/csv",
+     key='download-csv'
+ )
+
 
 
