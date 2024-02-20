@@ -74,7 +74,7 @@ st.download_button(
      csv,
      "Radar.csv",
      "text/csv",
-     key='download-csv'
+     key='download-csvradar'
  )
 
 st.download_button(
@@ -82,7 +82,7 @@ st.download_button(
      csv2,
      "ADXL.csv",
      "text/csv",
-     key='download-csv'
+     key='download-csvadxl'
  )
 
 
