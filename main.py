@@ -241,6 +241,9 @@ df_freqnstat = freqnstatdf(df,df2)
 df_freq = freqdf(df,df2) 
 df_norm_p = normpdf(df,df2) 
 df_norm_stat = normstatdf(df,df2) 
+df_freq_trans = df_freq.T 
+df_norm_p_trans = df_norm_p.T
+
 
 if st.button("Run all models"):
  result_clf_freqnstat,result_clf_freq,result_clf_norm_p,result_clf_norm_stat = predict(df_freqnstat,df_freq,df_norm_p,df_norm_stat)
@@ -256,4 +259,4 @@ if st.button("Run all models"):
  st.write("result_clf_norm_p Accuracy = "+str(result_clf_norm_p_accuracy*100)+"%")
  result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
  st.write("result_clf_norm_stat Accuracy = "+str(result_clf_norm_stat_accuracy*100)+"%")
- st.write(df_freqnstat,df_freq.T,df_norm_p.T,df_norm_stat)
+ st.write(df_freqnstat,df_freq_trans,df_norm_p_trans,df_norm_stat)
