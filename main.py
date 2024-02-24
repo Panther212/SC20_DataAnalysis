@@ -5,7 +5,8 @@ from google.cloud import firestore
 import pandas as pd
 import joblib
 from prediction import predict
-from google.cloud import FieldFilter
+#from google.cloud import FieldFilter
+from google.cloud.firestore_v1.types import FieldFilter
 from sklearn.metrics import accuracy_score, classification_report
 from scipy import signal
 from sklearn.preprocessing import MinMaxScaler
