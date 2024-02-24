@@ -6,6 +6,9 @@ import pandas as pd
 import joblib
 from prediction import predict
 from google.cloud.firestore import FieldFilter
+from sklearn.metrics import accuracy_score, classification_report
+from scipy import signal
+from sklearn.preprocessing import MinMaxScaler
 
 
 st.set_page_config(layout="wide")
@@ -34,24 +37,32 @@ doc_ref = db.collection("DevMode").stream()
 i=1 
 df = pd.DataFrame()
 df2 = pd.DataFrame()
+df3 = pd.DataFrame()
+TreeNos_list = []
 
-query = db.collection('DevMode').where(filter=FieldFilter("TreeNo", "==", number)).get()
+query = db.collection('DevMode').where(filter=FieldFilter("TreeNo", "==", 5)).get()
 
 for doc in query:
     adxl = doc.to_dict()['ADXLRaw']
     radar = doc.to_dict()['RadarRaw']
+    #true_labels = doc.to_dict()['InfStat']
     df['Radar '+str(i)] = pd.Series(radar)
     df2['ADXL '+str(i)] = pd.Series(adxl)
+    TreeNos_list.append(doc.to_dict()['InfStat'])
     i+=1
     
  #   df['Radar'] = pd.DataFrame.from_dict(radar, orient='index');
  #   df['ADXL'] = pd.DataFrame.from_dict(adxl, orient='index');
 #    i+=1
+df = df.dropna()
+df2 = df2.dropna()
 
 #st.write(df);
 st.write(df); 
 st.write(df2); 
+st.write(TreeNos_list)
 
+#TreeNos_list.to_numpy
 
 @st.cache
 def convert_df(df):
@@ -117,7 +128,7 @@ def calculate_and_transform_statistics_radar(df, group_size):
 
 
 
-def calculate_and_transform_statistics_adxl(df, group_size):
+def calculate_and_transform_statistics_adxl(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
@@ -146,10 +157,6 @@ def calculate_and_transform_statistics_adxl(df, group_size):
         "RMS_ADXL": rms_list
         })
         result_df = pd.concat([result_df, column_result_df],axis=0)
-        
-
-    
-   
 
     #df_melted = pd.melt(result_df, value_vars=['STD_ADXL', 'PTP_ADXL', 'Mean_ADXL', 'RMS_ADXL'], var_name='Variable', value_name='Value')
     #df_melted['Type'] = df_melted.groupby('Variable').cumcount()
@@ -159,14 +166,91 @@ def calculate_and_transform_statistics_adxl(df, group_size):
     return result_df
 
 
-df_radar_result = calculate_and_transform_statistics_radar(df, 100)
-df_adxl_result  = calculate_and_transform_statistics_adxl(df2, 20)
-df_test = pd.concat([df_radar_result,df_adxl_result],axis=1)
-df_test = df_test.dropna()
+def radar_fq(df):
+    frequencies = []
+    powers = []
 
-st.write(df_test)
+    for i in df:
+        f, p = signal.welch(df[i], 100, 'flattop', 1024, scaling='spectrum')
+        powers.append(p)
+    powers = pd.DataFrame(powers)
+    return powers
 
+def adxl_fq(df):
+    frequencies = []
+    powers = []
 
-if st.button("Predict type of Scan"):
- result = predict(df_test)
- st.text(result)
+    for i in df:
+        f, p = signal.welch(df[i], 20, 'flattop', 256, scaling='spectrum')
+        powers.append(p)
+    powers = pd.DataFrame(powers)
+    return powers
+
+def norm(df):
+  scaler = MinMaxScaler()
+  df_normalized = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+  return df_normalized
+
+def freqnstatdf(df,df2):
+   df_radar_result = radar_fq(df)
+   df_adxl_result = calculate_and_transform_statistics_adxl(df2)
+   df_adxl_result = df_adxl_result.reset_index(drop=True)
+   radar_new_column_names = ['radar' + str(i) for i in range(df_radar_result.shape[1])]
+   df_radar_result.columns = radar_new_column_names
+   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+
+   return df_test
+   
+def freqdf(df,df2):
+   df_radar_result = radar_fq(df)
+   df_adxl_result = adxl_fq(df2)
+   adxl_new_column_names = ['adxl' + str(i) for i in range(df_adxl_result.shape[1])]
+   df_adxl_result.columns = adxl_new_column_names
+   radar_new_column_names = ['radar' + str(i) for i in range(df_radar_result.shape[1])]
+   df_radar_result.columns = radar_new_column_names
+   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+   return df_test
+
+def normpdf(df,df2):
+   df_radar_result = norm(df)
+   df_adxl_result = norm(df2)
+   df_radar_result = radar_fq(df_radar_result)
+   df_adxl_result = adxl_fq(df_adxl_result)
+   adxl_new_column_names = ['adxl' + str(i) for i in range(df_adxl_result.shape[1])]
+   df_adxl_result.columns = adxl_new_column_names
+   radar_new_column_names = ['Radar' + str(i) for i in range(df_radar_result.shape[1])]
+   df_radar_result.columns = radar_new_column_names
+   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+   return df_test
+   
+def normstatdf(df,df2):
+   df_radar_result = norm(df)
+   df_adxl_result = norm(df2)
+   df_radar_result = radar_fq(df_radar_result)
+   df_adxl_result = calculate_and_transform_statistics_adxl(df_adxl_result)
+   df_adxl_result = df_adxl_result.reset_index(drop=True)
+   radar_new_column_names = ['Radar' + str(i) for i in range(df_radar_result.shape[1])]
+   df_radar_result.columns = radar_new_column_names
+   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+
+   return df_test
+   
+df_freqnstat = freqnstatdf(df,df2) 
+df_freq = freqdf(df,df2) 
+df_norm_p = normpdf(df,df2) 
+df_norm_stat = normstatdf(df,df2) 
+
+if st.button("Run all models"):
+ result_clf_freqnstat,result_clf_freq,result_clf_norm_p,result_clf_norm_stat = predict(df_freqnstat,df_freq,df_norm_p,df_norm_stat)
+ st.text(result_clf_freqnstat)
+ st.text(result_clf_freq)
+ st.text(result_clf_norm_p)
+ st.text(result_clf_norm_stat)
+ result_clf_freqnstat_accuracy = accuracy_score(TreeNos_list,result_clf_freqnstat)
+ st.write("result_clf_freqnstat Accuracy = "+str(result_clf_freqnstat_accuracy*100)+"%")
+ result_clf_freq_accuracy = accuracy_score(TreeNos_list,result_clf_freq)
+ st.write("result_clf_freq Accuracy = "+str(result_clf_freq_accuracy*100)+"%")
+ result_clf_norm_p_accuracy = accuracy_score(TreeNos_list,result_clf_norm_p)
+ st.write("result_clf_norm_p Accuracy = "+str(result_clf_norm_p_accuracy*100)+"%")
+ result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
+ st.write("result_clf_norm_stat Accuracy = "+str(result_clf_norm_stat_accuracy*100)+"%")
