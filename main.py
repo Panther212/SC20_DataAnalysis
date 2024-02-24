@@ -42,7 +42,7 @@ df2 = pd.DataFrame()
 df3 = pd.DataFrame()
 TreeNos_list = []
 
-query = db.collection('DevMode').where(filter=FieldFilter("TreeNo", "==", 5)).get()
+query = db.collection('DevMode').where(filter=FieldFilter("TreeNo", "==", int(number))).get()
 
 for doc in query:
     adxl = doc.to_dict()['ADXLRaw']
