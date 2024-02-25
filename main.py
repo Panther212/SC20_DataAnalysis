@@ -89,23 +89,29 @@ st.download_button(
      key='download-csvadxl'
  )
 
+def radar_fq(df):
+    frequencies = []
+    powers = []
 
+    for i in df:
+        f, p = signal.welch(df[i], 100, 'flattop', 1024, scaling='spectrum')
+        powers.append(p)
+    powers = pd.DataFrame(powers)
+    return powers
 
-def calculate_and_transform_statistics_radar(df, group_size):
+def calculate_and_transform_statistics_radar(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
         std_list, ptp_list, mean_list, rms_list = [], [], [], []
 
-     #for i in range(0, len(df), group_size):
-        #data_subset = df[column].iloc[i:i+group_size]
         dfx= df[column]
         dfx = pd.DataFrame(dfx)
         dfx = dfx.dropna()
         std_value = np.std(df[column])
-        ptp_value = np.ptp(dfx)
-        mean_value = np.mean(dfx)
-        rms_value = np.sqrt(np.mean(dfx**2))
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
 
         std_list.append(std_value)
         ptp_list.append(ptp_value)
@@ -120,32 +126,22 @@ def calculate_and_transform_statistics_radar(df, group_size):
         "RMS": rms_list
         })
         result_df = pd.concat([result_df, column_result_df],axis=0)
-    #st.write(result_df)
-
-    #df_melted = pd.melt(result_df, value_vars=['STD', 'PTP', 'Mean', 'RMS'], var_name='Variable', value_name='Value')
-    #df_melted['Type'] = df_melted.groupby('Variable').cumcount()
-    #df_result = df_melted.pivot_table(index='Type', columns='Variable', values='Value', aggfunc='first').reset_index(drop=True)
-    #df_result.columns = ['STD', 'PTP', 'Mean', 'RMS']
-    st.write(result_df)
     return result_df
 
 
-
-def calculate_and_transform_statistics_adxl(df):
+def calculate_and_transform_statistics_fq(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
         std_list, ptp_list, mean_list, rms_list = [], [], [], []
 
-     #for i in range(0, len(df), group_size):
-        #data_subset = df[column].iloc[i:i+group_size]
         dfx= df[column]
         dfx = pd.DataFrame(dfx)
         dfx = dfx.dropna()
         std_value = np.std(df[column])
-        ptp_value = np.ptp(dfx)
-        mean_value = np.mean(dfx)
-        rms_value = np.sqrt(np.mean(dfx**2))
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
 
         std_list.append(std_value)
         ptp_list.append(ptp_value)
@@ -154,110 +150,140 @@ def calculate_and_transform_statistics_adxl(df):
 
 
         column_result_df = pd.DataFrame({
-        "STD_ADXL": std_list,
-        "PTP_ADXL": ptp_list,
-        "Mean_ADXL": mean_list,
-        "RMS_ADXL": rms_list
+        "fq_STD": std_list,
+        "fq_PTP": ptp_list,
+        "fq_Mean": mean_list,
+        "fq_RMS": rms_list
         })
         result_df = pd.concat([result_df, column_result_df],axis=0)
-
-    #df_melted = pd.melt(result_df, value_vars=['STD_ADXL', 'PTP_ADXL', 'Mean_ADXL', 'RMS_ADXL'], var_name='Variable', value_name='Value')
-    #df_melted['Type'] = df_melted.groupby('Variable').cumcount()
-    #df_result = df_melted.pivot_table(index='Type', columns='Variable', values='Value', aggfunc='first').reset_index(drop=True)
-    #df_result.columns = ['STD_ADXL', 'PTP_ADXL', 'Mean_ADXL', 'RMS_ADXL']
-    st.write(result_df)
     return result_df
-
-
-def radar_fq(df):
-    frequencies = []
-    powers = []
-
-    for i in df:
-        f, p = signal.welch(df[i], 100, 'flattop', 1024, scaling='spectrum')
-        powers.append(p)
-    powers = pd.DataFrame(powers)
-    return powers
-
 def adxl_fq(df):
     frequencies = []
     powers = []
 
     for i in df:
-        f, p = signal.welch(df[i], 20, 'flattop', 256, scaling='spectrum')
+        f, p = signal.welch(df[i], 20, 'flattop', 1024, scaling='spectrum')
         powers.append(p)
     powers = pd.DataFrame(powers)
     return powers
 
-def norm(df):
-  scaler = MinMaxScaler()
-  df_normalized = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
-  return df_normalized
+def calculate_and_transform_statistics_adxl(df):
+    result_df = pd.DataFrame()
 
-def freqnstatdf(df,df2):
-   df_radar_result = radar_fq(df)
-   df_adxl_result = calculate_and_transform_statistics_adxl(df2)
-   df_adxl_result = df_adxl_result.reset_index(drop=True)
-   radar_new_column_names = ['radar' + str(i) for i in range(df_radar_result.shape[1])]
-   df_radar_result.columns = radar_new_column_names
-   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+    for column in df.columns:
+        std_list, ptp_list, mean_list, rms_list = [], [], [], []
 
-   return df_test
-   
-def freqdf(df,df2):
-   df_radar_result = radar_fq(df)
-   df_adxl_result = adxl_fq(df2)
-   adxl_new_column_names = ['adxl' + str(i) for i in range(df_adxl_result.shape[1])]
-   df_adxl_result.columns = adxl_new_column_names
-   radar_new_column_names = ['radar' + str(i) for i in range(df_radar_result.shape[1])]
-   df_radar_result.columns = radar_new_column_names
-   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
-   return df_test
+        dfx= df[column]
+        dfx = pd.DataFrame(dfx)
+        dfx = dfx.dropna()
+        std_value = np.std(df[column])
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
 
-def normpdf(df,df2):
-   df_radar_result = norm(df)
-   df_adxl_result = norm(df2)
-   df_radar_result = radar_fq(df_radar_result)
-   df_adxl_result = adxl_fq(df_adxl_result)
-   adxl_new_column_names = ['adxl' + str(i) for i in range(df_adxl_result.shape[1])]
-   df_adxl_result.columns = adxl_new_column_names
-   radar_new_column_names = ['Radar' + str(i) for i in range(df_radar_result.shape[1])]
-   df_radar_result.columns = radar_new_column_names
-   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
-   return df_test
-   
-def normstatdf(df,df2):
-   df_radar_result = norm(df)
-   df_adxl_result = norm(df2)
-   df_radar_result = radar_fq(df_radar_result)
-   df_adxl_result = calculate_and_transform_statistics_adxl(df_adxl_result)
-   df_adxl_result = df_adxl_result.reset_index(drop=True)
-   radar_new_column_names = ['Radar' + str(i) for i in range(df_radar_result.shape[1])]
-   df_radar_result.columns = radar_new_column_names
-   df_test = pd.concat([df_adxl_result,df_radar_result],axis=1)
+        std_list.append(std_value)
+        ptp_list.append(ptp_value)
+        mean_list.append(mean_value)
+        rms_list.append(rms_value)
 
-   return df_test
-   
-df_freqnstat = freqnstatdf(df,df2) 
-df_freq = freqdf(df,df2) 
-df_norm_p = normpdf(df,df2) 
-df_norm_stat = normstatdf(df,df2) 
-df_freq_trans = df_freq.T 
-df_norm_p_trans = df_norm_p.T
 
+        column_result_df = pd.DataFrame({
+        "adxl_STD": std_list,
+        "adxl_PTP": ptp_list,
+        "adxl_Mean": mean_list,
+        "adxl_RMS": rms_list
+        })
+        result_df = pd.concat([result_df, column_result_df],axis=0)
+    return result_df
+
+
+def calculate_and_transform_statistics_adxl_fq(df):
+    result_df = pd.DataFrame()
+
+    for column in df.columns:
+        std_list, ptp_list, mean_list, rms_list = [], [], [], []
+
+        dfx= df[column]
+        dfx = pd.DataFrame(dfx)
+        dfx = dfx.dropna()
+        std_value = np.std(df[column])
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
+
+        std_list.append(std_value)
+        ptp_list.append(ptp_value)
+        mean_list.append(mean_value)
+        rms_list.append(rms_value)
+
+
+        column_result_df = pd.DataFrame({
+        "adxl_fq_STD": std_list,
+        "adxl_fq_PTP": ptp_list,
+        "adxl_fq_Mean": mean_list,
+        "adxl_fq_RMS": rms_list
+        })
+        result_df = pd.concat([result_df, column_result_df],axis=0)
+    return result_df
+def test_datas(r_df,a_df):
+
+  radar_df_fq = r_df
+  adxl_df = a_df
+  
+  radar_df_fq = radar_fq(r_df)
+  adxl_df_fq = adxl_fq(a_df)
+  
+  radar_df_stats = calculate_and_transform_statistics_radar(r_df)
+  adxl_df_stats = calculate_and_transform_statistics_adxl(a_df)
+  
+  radar_df_fq_T = radar_df_fq.T
+  adxl_fq_T = adxl_df_fq.T
+
+  radar_df_fq_stats = calculate_and_transform_statistics_fq(radar_df_fq_T)
+  adxl_df_fq_stats = calculate_and_transform_statistics_adxl_fq(adxl_fq_T)
+  
+  adxl_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
+  radar_df_fq.columns = Radar1_power_name
+
+  adxl_power_name = ['adxl' + str(i) for i in range(adxl_df_fq.shape[1])]
+  adxl_df_fq.columns = adxl_power_name
+
+  radar_df_fq = radar_df_fq.reset_index(drop=True)
+  radar_df_stats = radar_df_stats.reset_index(drop=True)
+  radar_df_fq_stats = radar_df_fq_stats.reset_index(drop=True)
+  
+  adxl_df_fq = adxl_df_fq.reset_index(drop=True)
+  adxl_df_stats = adxl_df_stats.reset_index(drop=True)
+  adxl_df_fq_stats = adxl_df_fq_stats.reset_index(drop=True)
+  
+  meg4_test = pd.concat([radar_df_fq,radar_df_stats,radar_df_fq_stats,adxl_df_fq,adxl_df_stats,adxl_df_fq_stats],axis=1)
+  meg4_test = meg4_test.loc[:, ~meg4_test.columns.duplicated()]
+  
+  meg5_test = pd.concat([radar_df_stats,radar_df_fq_stats,adxl_df_stats,adxl_df_fq_stats],axis=1)
+  meg5_test = meg5_test.loc[:, ~meg5_test.columns.duplicated()]
+  
+  meg6_test = pd.concat([radar_df_fq,radar_df_fq_stats,adxl_df_fq,adxl_df_fq_stats],axis=1)
+  meg6_test = meg6_test.loc[:, ~meg6_test.columns.duplicated()]
+
+  meg4_test = meg4_test.fillna(meg4_test.mean())
+  meg5_test = meg5_test.fillna(meg5_test.mean())
+  meg6_test = meg6_test.fillna(meg6_test.mean())
+  return(meg4_test,meg5_test,meg6_test)
+
+model1, model2, model3 = test_datas(df,df2)
 
 if st.button("Run all models"):
- result_clf_freqnstat,result_clf_freq,result_clf_norm_p,result_clf_norm_stat = predict(df_freqnstat,df_freq,df_norm_p,df_norm_stat)
- st.text(result_clf_freqnstat)
- st.text(result_clf_freq)
- st.text(result_clf_norm_p)
- st.text(result_clf_norm_stat)
- result_clf_freqnstat_accuracy = accuracy_score(TreeNos_list,result_clf_freqnstat)
- st.write("result_clf_freqnstat Accuracy = "+str(result_clf_freqnstat_accuracy*100)+"%")
- result_clf_freq_accuracy = accuracy_score(TreeNos_list,result_clf_freq)
- st.write("result_clf_freq Accuracy = "+str(result_clf_freq_accuracy*100)+"%")
- result_clf_norm_p_accuracy = accuracy_score(TreeNos_list,result_clf_norm_p)
- st.write("result_clf_norm_p Accuracy = "+str(result_clf_norm_p_accuracy*100)+"%")
- result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
- st.write("result_clf_norm_stat Accuracy = "+str(result_clf_norm_stat_accuracy*100)+"%")
- st.write(df_freqnstat,df_freq_trans,df_norm_p_trans,df_norm_stat)
+ result_model1,result_model2,result_model3 = predict(model1, model2, model3)
+ st.text(result_model1)
+ st.text(result_model2)
+ st.text(result_model3)
+ #st.text(result_clf_norm_stat)
+ model1_accuracy = accuracy_score(TreeNos_list,result_model1)
+ st.write("result_clf_freqnstat Accuracy = "+str(model1_accuracy*100)+"%")
+ model2_accuracy = accuracy_score(TreeNos_list,result_model2)
+ st.write("result_clf_freq Accuracy = "+str(model2_accuracy*100)+"%")
+ model3_accuracy = accuracy_score(TreeNos_list,result_model3)
+ st.write("result_clf_norm_p Accuracy = "+str(model3_accuracy*100)+"%")
+ #result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
+ #st.write("result_clf_norm_stat Accuracy = "+str(result_clf_norm_stat_accuracy*100)+"%")
+ #st.write(df_freqnstat,df_freq_trans,df_norm_p_trans,df_norm_stat)
