@@ -242,7 +242,7 @@ def test_datas(r_df,a_df):
   radar_df_fq_stats = calculate_and_transform_statistics_fq(radar_df_fq_T)
   adxl_df_fq_stats = calculate_and_transform_statistics_adxl_fq(adxl_fq_T)
   
-  adxl_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
+  Radar1_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
   radar_df_fq.columns = Radar1_power_name
 
   adxl_power_name = ['adxl' + str(i) for i in range(adxl_df_fq.shape[1])]
