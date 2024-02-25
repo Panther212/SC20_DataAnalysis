@@ -272,7 +272,7 @@ if st.button("Run all models"):
  #st.text(result_model3)
  #st.text(result_clf_norm_stat)
  model1_accuracy = accuracy_score(TreeNos_list,result_model1)
- st.write("result_clf_freqnstat Accuracy = "+str(model1_accuracy*100)+"%")
+ st.write("model1 accuracy = "+str(model1_accuracy*100)+"%")
  #model2_accuracy = accuracy_score(TreeNos_list,result_model2)
 # st.write("result_clf_freq Accuracy = "+str(model2_accuracy*100)+"%")
 # model3_accuracy = accuracy_score(TreeNos_list,result_model3)
