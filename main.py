@@ -162,7 +162,7 @@ def adxl_fq(df):
     powers = []
 
     for i in df:
-        f, p = signal.welch(df[i], 20, 'flattop', 1024, scaling='spectrum')
+        f, p = signal.welch(df[i], 20, 'flattop', 360, scaling='spectrum')
         powers.append(p)
     powers = pd.DataFrame(powers)
     return powers
@@ -225,25 +225,26 @@ def calculate_and_transform_statistics_adxl_fq(df):
         })
         result_df = pd.concat([result_df, column_result_df],axis=0)
     return result_df
+
 def test_datas(r_df,a_df):
 
   radar_df_fq = r_df
   adxl_df = a_df
-  
+
   radar_df_fq = radar_fq(r_df)
   adxl_df_fq = adxl_fq(a_df)
-  
+
   radar_df_stats = calculate_and_transform_statistics_radar(r_df)
   adxl_df_stats = calculate_and_transform_statistics_adxl(a_df)
-  
+
   radar_df_fq_T = radar_df_fq.T
   adxl_fq_T = adxl_df_fq.T
 
   radar_df_fq_stats = calculate_and_transform_statistics_fq(radar_df_fq_T)
   adxl_df_fq_stats = calculate_and_transform_statistics_adxl_fq(adxl_fq_T)
-  
-  adxl_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
-  radar_df_fq.columns = adxl_power_name
+
+  Radar1_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
+  radar_df_fq.columns = Radar1_power_name
 
   adxl_power_name = ['adxl' + str(i) for i in range(adxl_df_fq.shape[1])]
   adxl_df_fq.columns = adxl_power_name
@@ -251,39 +252,31 @@ def test_datas(r_df,a_df):
   radar_df_fq = radar_df_fq.reset_index(drop=True)
   radar_df_stats = radar_df_stats.reset_index(drop=True)
   radar_df_fq_stats = radar_df_fq_stats.reset_index(drop=True)
-  
+
   adxl_df_fq = adxl_df_fq.reset_index(drop=True)
   adxl_df_stats = adxl_df_stats.reset_index(drop=True)
   adxl_df_fq_stats = adxl_df_fq_stats.reset_index(drop=True)
-  
-  meg4_test = pd.concat([radar_df_fq,radar_df_stats,radar_df_fq_stats,adxl_df_fq,adxl_df_stats,adxl_df_fq_stats],axis=1)
-  meg4_test = meg4_test.loc[:, ~meg4_test.columns.duplicated()]
-  
+
   meg5_test = pd.concat([radar_df_stats,radar_df_fq_stats,adxl_df_stats,adxl_df_fq_stats],axis=1)
   meg5_test = meg5_test.loc[:, ~meg5_test.columns.duplicated()]
-  
-  meg6_test = pd.concat([radar_df_fq,radar_df_fq_stats,adxl_df_fq,adxl_df_fq_stats],axis=1)
-  meg6_test = meg6_test.loc[:, ~meg6_test.columns.duplicated()]
 
-  meg4_test = meg4_test.fillna(meg4_test.mean())
   meg5_test = meg5_test.fillna(meg5_test.mean())
-  meg6_test = meg6_test.fillna(meg6_test.mean())
-  return(meg4_test,meg5_test,meg6_test)
+  return(meg5_test)
 
-model1, model2, model3 = test_datas(df,df2)
+model1 = test_datas(df,df2)
 
 if st.button("Run all models"):
- result_model1,result_model2,result_model3 = predict(model1, model2, model3)
+ result_model1 = predict(model1)
  st.text(result_model1)
- st.text(result_model2)
- st.text(result_model3)
+# st.text(result_model2)
+ #st.text(result_model3)
  #st.text(result_clf_norm_stat)
  model1_accuracy = accuracy_score(TreeNos_list,result_model1)
  st.write("result_clf_freqnstat Accuracy = "+str(model1_accuracy*100)+"%")
- model2_accuracy = accuracy_score(TreeNos_list,result_model2)
- st.write("result_clf_freq Accuracy = "+str(model2_accuracy*100)+"%")
- model3_accuracy = accuracy_score(TreeNos_list,result_model3)
- st.write("result_clf_norm_p Accuracy = "+str(model3_accuracy*100)+"%")
+ #model2_accuracy = accuracy_score(TreeNos_list,result_model2)
+# st.write("result_clf_freq Accuracy = "+str(model2_accuracy*100)+"%")
+# model3_accuracy = accuracy_score(TreeNos_list,result_model3)
+ #st.write("result_clf_norm_p Accuracy = "+str(model3_accuracy*100)+"%")
  #result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
  #st.write("result_clf_norm_stat Accuracy = "+str(result_clf_norm_stat_accuracy*100)+"%")
  #st.write(df_freqnstat,df_freq_trans,df_norm_p_trans,df_norm_stat)
