@@ -1,9 +1,9 @@
 import joblib
 
 
-def predict(df_freqnstat,df_freq,df_norm_p,df_norm_stat):
- clf_freqnstat = joblib.load("freq_n_stats_clf.sav")
- clf_freq = joblib.load("freq_clf_.sav")
- clf_norm_p = joblib.load("norm_p_clf.sav")
- clf_norm_stat = joblib.load("norm_stats_clf.sav")
- return clf_freqnstat.predict(df_freqnstat), clf_freq.predict(df_freq),clf_norm_p.predict(df_norm_p), clf_norm_stat.predict(df_norm_stat)
+def predict(m1,m2,m3):
+ model1 = joblib.load("Model1.sav")
+ model2 = joblib.load("Model2.sav")
+ model3 = joblib.load("Model3.sav")
+ #lf_norm_stat = joblib.load("norm_stats_clf.sav")
+ return model1.predict(m1), model2.predict(m2),model3.predict(m3)
