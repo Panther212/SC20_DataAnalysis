@@ -29,7 +29,7 @@ st.markdown(
 # Authenticate to Firestore with the JSON account key.
 db = firestore.Client.from_service_account_json("testdata1-20ec5-firebase-adminsdk-an9r6-d15c118c96.json")
 
-number = st.text_input('Enter Tree number', '')
+number = st.text_input('Enter Tree number', '1')
  
 # Create a reference to the Google post.
 #doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
