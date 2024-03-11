@@ -36,21 +36,30 @@ number = st.text_input('Enter Tree number', '1')
 #doc_ref = db.collection("T1R1").select("ADXL Raw", "Radar Raw").stream()
 
 
-doc_ref = db.collection("DevMode").stream()
+doc_ref = db.collection("DevOps").stream()
 i=1 
 df = pd.DataFrame()
 df2 = pd.DataFrame()
 df3 = pd.DataFrame()
+Axdf = pd.DataFrame()
+Aydf = pd.DataFrame()
+Azdf = pd.DataFrame()
 TreeNos_list = []
 
-query = db.collection('DevMode').where(filter=FieldFilter("RowNo", "==", int(number_row))).where(filter=FieldFilter("TreeNo", "==", int(number))).get()
+query = db.collection('DevOps').where(filter=FieldFilter("RowNo", "==", int(number_row))).where(filter=FieldFilter("TreeNo", "==", int(number))).get()
 
 for doc in query:
     adxl = doc.to_dict()['ADXLRaw']
     radar = doc.to_dict()['RadarRaw']
+    Ax = doc.to_dict()['Ax']
+    Ay = doc.to_dict()['Ay']
+    Az = doc.to_dict()['Az']
     #true_labels = doc.to_dict()['InfStat']
     df['Radar '+str(i)] = pd.Series(radar)
     df2['ADXL '+str(i)] = pd.Series(adxl)
+    Axdf['Ax '+str(i)] = pd.Series(Ax)
+    Aydf['Ay '+str(i)] = pd.Series(Ay)
+    Azdf['Az '+str(i)] = pd.Series(Az)
     TreeNos_list.append(doc.to_dict()['InfStat'])
     i+=1
     
@@ -59,10 +68,16 @@ for doc in query:
 #    i+=1
 df = df.dropna()
 df2 = df2.dropna()
+Axdf = Axdf.dropna()
+Aydf = Aydf.dropna()
+Azdf = Azdf.dropna()
 
 #st.write(df);
 st.write(df); 
 st.write(df2); 
+st.write(Axdf); 
+st.write(Aydf); 
+st.write(Azdf); 
 st.write(TreeNos_list)
 
 #TreeNos_list.to_numpy
@@ -72,6 +87,9 @@ def convert_df(df):
  return df.to_csv().encode('utf-8')
 csv = convert_df(df)
 csv2 = convert_df(df2)
+csv3 = convert_df(Axdf)
+csv4 = convert_df(Aydf)
+csv5 = convert_df(Azdf)
 
 st.download_button(
      "Press to Download Radar",
@@ -87,6 +105,27 @@ st.download_button(
      "ADXL.csv",
      "text/csv",
      key='download-csvadxl'
+ )
+st.download_button(
+     "Press to Download Ax",
+     csv3,
+     "Ax.csv",
+     "text/csv",
+     key='download-csvax'
+ )
+st.download_button(
+     "Press to Download Ay",
+     csv4,
+     "Ay.csv",
+     "text/csv",
+     key='download-csvay'
+ )
+st.download_button(
+     "Press to Download Az",
+     csv5,
+     "Az.csv",
+     "text/csv",
+     key='download-csvaz'
  )
 
 def radar_fq(df):
