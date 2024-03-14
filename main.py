@@ -127,18 +127,7 @@ st.download_button(
      "text/csv",
      key='download-csvaz'
  )
-
-def radar_fq(df):
-    frequencies = []
-    powers = []
-
-    for i in df:
-        f, p = signal.welch(df[i], 100, 'flattop', 1024, scaling='spectrum')
-        powers.append(p)
-    powers = pd.DataFrame(powers)
-    return powers
-
-def calculate_and_transform_statistics_radar(df):
+def stats_radar(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
@@ -167,46 +156,7 @@ def calculate_and_transform_statistics_radar(df):
         result_df = pd.concat([result_df, column_result_df],axis=0)
     return result_df
 
-
-def calculate_and_transform_statistics_fq(df):
-    result_df = pd.DataFrame()
-
-    for column in df.columns:
-        std_list, ptp_list, mean_list, rms_list = [], [], [], []
-
-        dfx= df[column]
-        dfx = pd.DataFrame(dfx)
-        dfx = dfx.dropna()
-        std_value = np.std(df[column])
-        ptp_value = np.ptp(df[column])
-        mean_value = np.mean(df[column])
-        rms_value = np.sqrt(np.mean(df[column]**2))
-
-        std_list.append(std_value)
-        ptp_list.append(ptp_value)
-        mean_list.append(mean_value)
-        rms_list.append(rms_value)
-
-
-        column_result_df = pd.DataFrame({
-        "fq_STD": std_list,
-        "fq_PTP": ptp_list,
-        "fq_Mean": mean_list,
-        "fq_RMS": rms_list
-        })
-        result_df = pd.concat([result_df, column_result_df],axis=0)
-    return result_df
-def adxl_fq(df):
-    frequencies = []
-    powers = []
-
-    for i in df:
-        f, p = signal.welch(df[i], 20, 'flattop', 360, scaling='spectrum')
-        powers.append(p)
-    powers = pd.DataFrame(powers)
-    return powers
-
-def calculate_and_transform_statistics_adxl(df):
+def stats_adxl(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
@@ -236,7 +186,7 @@ def calculate_and_transform_statistics_adxl(df):
     return result_df
 
 
-def calculate_and_transform_statistics_adxl_fq(df):
+def stats_ax(df):
     result_df = pd.DataFrame()
 
     for column in df.columns:
@@ -257,52 +207,100 @@ def calculate_and_transform_statistics_adxl_fq(df):
 
 
         column_result_df = pd.DataFrame({
-        "adxl_fq_STD": std_list,
-        "adxl_fq_PTP": ptp_list,
-        "adxl_fq_Mean": mean_list,
-        "adxl_fq_RMS": rms_list
+        "ax_STD": std_list,
+        "ax_PTP": ptp_list,
+        "ax_Mean": mean_list,
+        "ax_RMS": rms_list
         })
         result_df = pd.concat([result_df, column_result_df],axis=0)
     return result_df
 
-def test_datas(r_df,a_df):
+def stats_ay(df):
+    result_df = pd.DataFrame()
 
-  radar_df_fq = r_df
-  adxl_df = a_df
+    for column in df.columns:
+        std_list, ptp_list, mean_list, rms_list = [], [], [], []
 
-  radar_df_fq = radar_fq(r_df)
-  adxl_df_fq = adxl_fq(a_df)
+        dfx= df[column]
+        dfx = pd.DataFrame(dfx)
+        dfx = dfx.dropna()
+        std_value = np.std(df[column])
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
 
-  radar_df_stats = calculate_and_transform_statistics_radar(r_df)
-  adxl_df_stats = calculate_and_transform_statistics_adxl(a_df)
+        std_list.append(std_value)
+        ptp_list.append(ptp_value)
+        mean_list.append(mean_value)
+        rms_list.append(rms_value)
 
-  radar_df_fq_T = radar_df_fq.T
-  adxl_fq_T = adxl_df_fq.T
 
-  radar_df_fq_stats = calculate_and_transform_statistics_fq(radar_df_fq_T)
-  adxl_df_fq_stats = calculate_and_transform_statistics_adxl_fq(adxl_fq_T)
+        column_result_df = pd.DataFrame({
+        "ay_STD": std_list,
+        "ay_PTP": ptp_list,
+        "ay_Mean": mean_list,
+        "ay_RMS": rms_list
+        })
+        result_df = pd.concat([result_df, column_result_df],axis=0)
+    return result_df
 
-  Radar1_power_name = ['radar' + str(i) for i in range(radar_df_fq.shape[1])]
-  radar_df_fq.columns = Radar1_power_name
+def stats_az(df):
+    result_df = pd.DataFrame()
 
-  adxl_power_name = ['adxl' + str(i) for i in range(adxl_df_fq.shape[1])]
-  adxl_df_fq.columns = adxl_power_name
+    for column in df.columns:
+        std_list, ptp_list, mean_list, rms_list = [], [], [], []
 
-  radar_df_fq = radar_df_fq.reset_index(drop=True)
-  radar_df_stats = radar_df_stats.reset_index(drop=True)
-  radar_df_fq_stats = radar_df_fq_stats.reset_index(drop=True)
+        dfx= df[column]
+        dfx = pd.DataFrame(dfx)
+        dfx = dfx.dropna()
+        std_value = np.std(df[column])
+        ptp_value = np.ptp(df[column])
+        mean_value = np.mean(df[column])
+        rms_value = np.sqrt(np.mean(df[column]**2))
 
-  adxl_df_fq = adxl_df_fq.reset_index(drop=True)
-  adxl_df_stats = adxl_df_stats.reset_index(drop=True)
-  adxl_df_fq_stats = adxl_df_fq_stats.reset_index(drop=True)
+        std_list.append(std_value)
+        ptp_list.append(ptp_value)
+        mean_list.append(mean_value)
+        rms_list.append(rms_value)
 
-  meg5_test = pd.concat([radar_df_stats,radar_df_fq_stats,adxl_df_stats,adxl_df_fq_stats],axis=1)
-  meg5_test = meg5_test.loc[:, ~meg5_test.columns.duplicated()]
 
-  meg5_test = meg5_test.fillna(meg5_test.mean())
-  return(meg5_test)
+        column_result_df = pd.DataFrame({
+        "az_STD": std_list,
+        "az_PTP": ptp_list,
+        "az_Mean": mean_list,
+        "az_RMS": rms_list
+        })
+        result_df = pd.concat([result_df, column_result_df],axis=0)
+    return result_df
 
-model1 = test_datas(df,df2)
+def detrend(dataframe):
+    detrended_data = dataframe-dataframe.mean()
+    #normalized_data = (detrended_data - detrended_data.min()) / (detrended_data.max() - detrended_data.min())
+    return (detrended_data)
+
+def preprocess(radar,adxl,ax,ay,az):
+  radar_stats =stats_radar(radar)
+  adxl_stats =stats_adxl(adxl)
+  ax_stats =stats_ax(ax)
+  ay_stats =stats_ay(ay)
+  az_stats =stats_az(az)
+  radar_detrend = detrend(radar)
+  adxl_detrend = detrend(adxl)
+  ax_detrend = detrend(ax)
+  ay_detrend = detrend(ay)
+  az_detrend = detrend(az)
+  radar_detrend_stats = stats_radar(radar_detrend)
+  adxl_detrend_stats = stats_adxl(adxl_detrend)
+  ax_detrend_stats = stats_ax(ax_detrend)
+  ay_detrend_stats = stats_ay(ay_detrend)
+  az_detrend_stats = stats_az(az_detrend)
+
+  return(radar_stats,adxl_stats,ax_stats,ay_stats,az_stats,radar_detrend,adxl_detrend,ax_detrend,ay_detrend,az_detrend,radar_detrend_stats,adxl_detrend_stats,ax_detrend_stats,ay_detrend_stats,az_detrend_stats)
+
+radar_stats,adxl_stats,ax_stats,ay_stats,az_stats,radar_detrend,adxl_detrend,ax_detrend,ay_detrend,az_detrend,radar_detrend_stats,adxl_detrend_stats,ax_detrend_stats,ay_detrend_stats,az_detrend_stats = preprocess(df,df2,Axdf,Aydf,Azdf) 
+stats = pd.concat([radar_stats,adxl_stats,ax_stats,ay_stats,az_stats],axis=1)
+detrend_stats = pd.concat([radar_detrend_stats,adxl_detrend_stats,ax_detrend_stats,ay_detrend_stats,az_detrend_stats],axis=1)
+
 
 if st.button("Run all models"):
  result_model1 = predict(model1)
