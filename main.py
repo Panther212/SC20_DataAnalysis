@@ -303,15 +303,16 @@ detrend_stats = pd.concat([radar_detrend_stats,adxl_detrend_stats,ax_detrend_sta
 
 
 if st.button("Run all models"):
- result_model1 = predict(model1)
+ result_model1,result_model2 = predict(stats,detrend_stats)
  st.text(result_model1)
+ st.text(result_model2)   
 # st.text(result_model2)
  #st.text(result_model3)
  #st.text(result_clf_norm_stat)
  model1_accuracy = accuracy_score(TreeNos_list,result_model1)
- st.write("model1 accuracy = "+str(model1_accuracy*100)+"%")
- #model2_accuracy = accuracy_score(TreeNos_list,result_model2)
-# st.write("result_clf_freq Accuracy = "+str(model2_accuracy*100)+"%")
+ st.write("model1 Accuracy = "+str(model1_accuracy*100)+"%")
+ model2_accuracy = accuracy_score(TreeNos_list,result_model2)
+ st.write("model2 Accuracy = "+str(model2_accuracy*100)+"%")
 # model3_accuracy = accuracy_score(TreeNos_list,result_model3)
  #st.write("result_clf_norm_p Accuracy = "+str(model3_accuracy*100)+"%")
  #result_clf_norm_stat_accuracy = accuracy_score(TreeNos_list,result_clf_norm_stat)
