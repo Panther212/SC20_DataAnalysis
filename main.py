@@ -72,6 +72,13 @@ Axdf = Axdf.dropna()
 Aydf = Aydf.dropna()
 Azdf = Azdf.dropna()
 
+df = df[100:1800]
+df2 = df2[100:1800]
+Axdf = Axdf[100:1800]
+Aydf = Aydf[100:1800]
+Azdf = Azdf[100:1800]
+
+
 #st.write(df);
 st.write(df); 
 st.write(df2); 
